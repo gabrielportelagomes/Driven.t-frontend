@@ -1,12 +1,25 @@
 import styled from 'styled-components';
+import useSaveTicket from '../../../hooks/api/useSaveTicket';
+import { toast } from 'react-toastify';
 
 export default function Summary({ ticket, setConfirmedTicket }) {
+  const { saveTicket } = useSaveTicket();
+
+  async function postTicket(ticketTypeId) {
+    try {
+      await saveTicket({ ticketTypeId });
+      toast('Informações salvas com sucesso!');
+      setConfirmedTicket(true);
+    } catch (error) {
+      toast('Não foi possível salvar suas informações!');
+    }
+  }
   return (
     <>
       <Text>
         Fechado! O total ficou em <span>R$ {ticket.price / 100}</span>. Agora é só confirmar:
       </Text>
-      <Button onClick={() => setConfirmedTicket(true)}>RESERVAR INGRESSO</Button>
+      <Button onClick={() => postTicket(ticket.id)}>RESERVAR INGRESSO</Button>
     </>
   );
 }
