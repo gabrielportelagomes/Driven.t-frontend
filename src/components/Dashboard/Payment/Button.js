@@ -5,7 +5,7 @@ const Button = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 145px;
+  width: 155px;
   height: 145px;
   border: ${(props) => (props.isSelected ? 'none' : '1px solid #cecece')};
   border-radius: 20px;
