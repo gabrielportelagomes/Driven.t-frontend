@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import styled from 'styled-components';
+import usePayment from '../../../hooks/api/useSavePayment';
+import useTicket from '../../../hooks/api/useSaveTicket';
 import useTicketType from '../../../hooks/api/useTicketType';
 import Button from './Button';
 import PaymentContainer from './PaymentContainer';
@@ -9,6 +11,8 @@ import Summary from './Summary';
 
 export default function TicketAndPayment() {
   const { ticketTypes } = useTicketType();
+  const { payment } = usePayment();
+  const { saveTicket } = useTicket();
   const [confirmedTicket, setConfirmedTicket] = useState(false);
   const [ticketType, setTicketType] = useState({
     id: null,
@@ -36,6 +40,16 @@ export default function TicketAndPayment() {
     return null;
   });
 
+  //colocar no onclick do botão
+  async function postTicket(ticketTypeId) {
+    try {
+      await saveTicket({ payment });
+      toast('Pagamento realizado com sucesso!');
+      setConfirmedTicket(true);
+    } catch (error) {
+      toast('Não foi possível salvar suas informações!');
+    }
+  }
   return (
     <>
       <PaymentContainer>
@@ -59,13 +73,15 @@ export default function TicketAndPayment() {
         )}
       </PaymentContainer>
 
-      <PaymentConfirm>
-        <Icon />
-        <Box>
-          <p>Pagamento confirmado!</p>
-          <span>Prossiga para escolha de hospedagem e atividades</span>
-        </Box>
-      </PaymentConfirm>
+      {
+        <PaymentConfirm>
+          <Icon />
+          <Box>
+            <p>Pagamento confirmado!</p>
+            <span>Prossiga para escolha de hospedagem e atividades</span>
+          </Box>
+        </PaymentConfirm>
+      }
     </>
   );
 }
