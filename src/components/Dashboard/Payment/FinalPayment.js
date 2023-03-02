@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import useTicket from '../../../hooks/api/useTicket';
 import ButtonSummary from './ButtonSummary';
+import PaymentForm from './PaymentForm';
 
 export default function FinalPayment() {
   const { ticket } = useTicket();
@@ -13,15 +14,16 @@ export default function FinalPayment() {
           <h1>{name}</h1>
           <p>R$ {price / 100}</p>
         </ButtonSummary>
+        <PaymentForm />
       </PaymentContainer>
     );
   }
-  return '';
+  return <></>;
 }
 
 const PaymentContainer = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
   & > p {
     margin-bottom: 17px;
     font-size: 20px;
