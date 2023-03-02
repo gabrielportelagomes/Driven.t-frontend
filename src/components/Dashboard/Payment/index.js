@@ -39,6 +39,7 @@ export default function TicketAndPayment() {
     <>
       <PaymentContainer>
         <h1>Ingresso e Pagamento</h1>
+
         {!confirmedTicket ? (
           <>
             <p>Primeiro, escolha sua modalidade de ingresso</p>

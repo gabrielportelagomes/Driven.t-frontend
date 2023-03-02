@@ -1,10 +1,15 @@
+import { useState } from 'react';
 import styled from 'styled-components';
+import useSavePayment from '../../../hooks/api/useSavePayment';
 import useTicket from '../../../hooks/api/useTicket';
 import ButtonSummary from './ButtonSummary';
 import PaymentForm from './PaymentForm';
 
 export default function FinalPayment() {
   const { ticket } = useTicket();
+  const { savePayment } = useSavePayment();
+  const [confirmPayment, setConfirmPayment] = useState(false);
+
   if (ticket) {
     const { name, price } = ticket.TicketType;
     return (
@@ -14,7 +19,12 @@ export default function FinalPayment() {
           <h1>{name}</h1>
           <p>R$ {price / 100}</p>
         </ButtonSummary>
-        <PaymentForm />
+        <PaymentForm
+          ticket={ticket}
+          savePayment={savePayment}
+          confirmPayment={confirmPayment}
+          setConfirmPayment={setConfirmPayment}
+        />
       </PaymentContainer>
     );
   }

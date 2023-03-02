@@ -10,7 +10,7 @@ const ButtonSummary = styled.div`
   border: none;
   border-radius: 20px;
   margin-right: 24px;
-  background-color: #FDEED2;
+  background-color: #fdeed2;
 
   & > h1 {
     color: #454545;
