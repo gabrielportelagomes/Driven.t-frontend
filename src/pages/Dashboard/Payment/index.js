@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 import useEnrollment from '../../../hooks/api/useEnrollment';
 import TicketAndPayment from '../../../components/Dashboard/Payment';
+import useTicket from '../../../hooks/api/useTicket';
+import FinalPayment from '../../../components/Dashboard/Payment/FinalPayment';
 
 export default function Payment() {
   const { enrollment } = useEnrollment();
+  const { ticket } = useTicket();
 
   if (!enrollment) {
     return (
@@ -13,6 +16,15 @@ export default function Payment() {
           <p>Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso</p>
         </div>
       </EmptyContainer>
+    );
+  }
+
+  if (ticket !== null) {
+    return (
+      <TicketContainer>
+        <h1>Ingresso e pagamento</h1>
+        <FinalPayment />
+      </TicketContainer>
     );
   }
 
@@ -38,5 +50,12 @@ const EmptyContainer = styled.div`
   & > h1 {
     font-size: 34px;
     font-weight: 400;
+  }
+`;
+
+const TicketContainer = styled.div`
+  &>h1{
+    margin-bottom: 37px;
+    font-size: 34px;
   }
 `;

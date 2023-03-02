@@ -4,6 +4,7 @@ import Button from './Button';
 import PaymentContainer from './PaymentContainer';
 import PresencialModality from './PresencialModality';
 import Summary from './Summary';
+import FinalPayment from './FinalPayment';
 
 export default function TicketAndPayment() {
   const { ticketTypes } = useTicketType();
@@ -43,12 +44,16 @@ export default function TicketAndPayment() {
             <p>Primeiro, escolha sua modalidade de ingresso</p>
             <div>{ticketTypeModality}</div>
             {(!ticketType.id && '') || (ticketType.isRemote && <Summary ticket={ticketType} setConfirmedTicket={setConfirmedTicket} />) || (ticketType.isRemote === false && <>
-              <p style={{ margin: '44px 0 17px 0' }}>Ótimo, Agora escolha sua modalidade de hospedagem</p> <PresencialModality ticketTypes={ticketTypes} setConfirmedTicket={setConfirmedTicket}/> </> )}
+              <p style={{ margin: '44px 0 17px 0' }}>Ótimo, Agora escolha sua modalidade de hospedagem</p> <PresencialModality ticketTypes={ticketTypes} setConfirmedTicket={setConfirmedTicket} /> </> )}
           </>
         ) : (
           '' //tela de pagamento
         )}
-
+        {confirmedTicket ? (
+          <FinalPayment />
+        ) : (
+          ''
+        )}
       </PaymentContainer>
     </>
   );
