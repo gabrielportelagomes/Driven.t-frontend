@@ -1,18 +1,13 @@
 import { useState } from 'react';
-import { BsFillCheckCircleFill } from 'react-icons/bs';
-import styled from 'styled-components';
-import usePayment from '../../../hooks/api/useSavePayment';
-import useTicket from '../../../hooks/api/useSaveTicket';
 import useTicketType from '../../../hooks/api/useTicketType';
 import Button from './Button';
 import PaymentContainer from './PaymentContainer';
 import PresencialModality from './PresencialModality';
 import Summary from './Summary';
+import FinalPayment from './FinalPayment';
 
 export default function TicketAndPayment() {
   const { ticketTypes } = useTicketType();
-  const { payment } = usePayment();
-  const { saveTicket } = useTicket();
   const [confirmedTicket, setConfirmedTicket] = useState(false);
   const [ticketType, setTicketType] = useState({
     id: null,
@@ -40,16 +35,6 @@ export default function TicketAndPayment() {
     return null;
   });
 
-  //colocar no onclick do botão
-  async function postTicket(ticketTypeId) {
-    try {
-      await saveTicket({ payment });
-      toast('Pagamento realizado com sucesso!');
-      setConfirmedTicket(true);
-    } catch (error) {
-      toast('Não foi possível salvar suas informações!');
-    }
-  }
   return (
     <>
       <PaymentContainer>
@@ -69,42 +54,9 @@ export default function TicketAndPayment() {
               ))}
           </>
         ) : (
-          '' //tela de pagamento
+          <FinalPayment />
         )}
       </PaymentContainer>
-
-      {
-        <PaymentConfirm>
-          <Icon />
-          <Box>
-            <p>Pagamento confirmado!</p>
-            <span>Prossiga para escolha de hospedagem e atividades</span>
-          </Box>
-        </PaymentConfirm>
-      }
     </>
   );
 }
-
-const PaymentConfirm = styled.div`
-  display: flex;
-  margin-top: 25px;
-`;
-const Icon = styled(BsFillCheckCircleFill)`
-  color: #36b853;
-  font-size: 48px;
-`;
-const Box = styled.div`
-  margin-left: 10px;
-  & > p {
-    font-weight: 700;
-    font-size: 18.8px;
-    margin-bottom: 5px;
-    color: #454545;
-  }
-  & > span {
-    font-size: 17.5px;
-    font-weight: 1;
-    color: #454545;
-  }
-`;
