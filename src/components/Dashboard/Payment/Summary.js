@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 export default function Summary({ ticket, setConfirmedTicket }) {
   const { saveTicket } = useSaveTicket();
-
+  
   async function postTicket(ticketTypeId) {
     try {
       await saveTicket({ ticketTypeId });

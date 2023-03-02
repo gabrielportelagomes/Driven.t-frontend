@@ -160,7 +160,7 @@ const Input = styled.input`
   padding: 10px;
   font-weight: 400;
   font-size: 16px;
-  color: #cecece;
+  color: #000000;
 `;
 
 const ExpiryInput = styled(Input)`
@@ -190,4 +190,5 @@ const PayButton = styled.button`
   margin-top: 57px;
   position: absolute;
   left: 0;
+  cursor: pointer;
 `;

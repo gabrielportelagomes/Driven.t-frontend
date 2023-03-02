@@ -4,7 +4,7 @@ import Button from './Button';
 import PaymentContainer from './PaymentContainer';
 import PresencialModality from './PresencialModality';
 import Summary from './Summary';
-import PaymentForm from './PaymentForm';
+import FinalPayment from './FinalPayment';
 
 export default function TicketAndPayment() {
   const { ticketTypes } = useTicketType();
@@ -53,7 +53,7 @@ export default function TicketAndPayment() {
               ))}
           </>
         ) : (
-          <PaymentForm />
+          <FinalPayment />
         )}
       </PaymentContainer>
     </>
