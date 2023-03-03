@@ -1,18 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useSavePayment from '../../../hooks/api/useSavePayment';
 import useTicket from '../../../hooks/api/useTicket';
 import ButtonSummary from './ButtonSummary';
 import PaymentForm from './PaymentForm';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
+import { getPayment } from '../../../services/paymentApi';
+import useToken from '../../../hooks/useToken';
 
 export default function FinalPayment() {
   const { ticket } = useTicket();
   const { savePayment } = useSavePayment();
+  const token = useToken();
   const [confirmPayment, setConfirmPayment] = useState(false);
+  const [paymentData, setPaymentData] = useState(undefined);
 
-  if (ticket) {
+  useEffect(() => {
+    if (ticket) {
+      getPayment(ticket.id, token)
+        .then((response) => {
+          setPaymentData(response);
+        })
+        .catch((error) => {
+          setPaymentData({ id: undefined });
+        });
+    }
+  }, [ticket]);
+
+  if (ticket && paymentData) {
     const { name, price } = ticket.TicketType;
+
     return (
       <PaymentContainer>
         <p>Ingresso escolhido</p>
@@ -20,7 +37,7 @@ export default function FinalPayment() {
           <h1>{name}</h1>
           <p>R$ {price / 100}</p>
         </ButtonSummary>
-        {confirmPayment ? (
+        {confirmPayment || paymentData.id ? (
           <PaymentConfirm>
             <h6>Pagamento</h6>
             <div>
@@ -32,12 +49,7 @@ export default function FinalPayment() {
             </div>
           </PaymentConfirm>
         ) : (
-          <PaymentForm
-            ticket={ticket}
-            savePayment={savePayment}
-            confirmPayment={confirmPayment}
-            setConfirmPayment={setConfirmPayment}
-          />
+          <PaymentForm ticket={ticket} savePayment={savePayment} setConfirmPayment={setConfirmPayment} />
         )}
       </PaymentContainer>
     );
