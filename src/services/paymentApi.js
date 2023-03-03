@@ -9,3 +9,13 @@ export async function savePayment(body, token) {
 
   return response.data;
 }
+
+export async function getPayment(data, token) {
+  const response = await api.get(`/payments?ticketId=${data}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
