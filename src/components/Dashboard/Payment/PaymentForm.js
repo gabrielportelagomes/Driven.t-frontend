@@ -3,7 +3,6 @@ import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/es/styles-compiled.css';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { formatCreditCardNumber, formatCVC, formatExpirationDate, formatFormData } from './PaymentUtils';
 
 export default class PaymentForm extends React.Component {
@@ -41,7 +40,7 @@ export default class PaymentForm extends React.Component {
     this.setState({ [target.name]: target.value });
   };
 
-  handleSubmit = async(e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { issuer } = this.state;
     const formData = [...e.target.elements]
@@ -63,7 +62,7 @@ export default class PaymentForm extends React.Component {
         },
       };
 
-      await this.props.savePayment(body);
+      this.props.savePayment(body);
       this.props.setConfirmPayment(true);
       toast('Pagamento realizado com sucesso!');
     } catch (error) {
@@ -71,7 +70,7 @@ export default class PaymentForm extends React.Component {
     }
 
     this.setState({ formData });
-    // this.form.reset();
+    this.form.reset();
   };
 
   render() {
@@ -79,79 +78,66 @@ export default class PaymentForm extends React.Component {
 
     return (
       <>
-        {this.props.confirmPayment ? (
-          <PaymentConfirm>
-            <h6>Pagamento</h6>
-            <div>
-              <Icon />
-              <Box>
-                <p>Pagamento confirmado!</p>
-                <span>Prossiga para escolha de hospedagem e atividades</span>
-              </Box>
-            </div>
-          </PaymentConfirm>
-        ) : (
-          <CardContainer>
-            <p>Pagamento</p>
-            <FormContainer>
-              <Cards
-                number={number}
-                name={name}
-                expiry={expiry}
-                cvc={cvc}
-                focused={focused}
-                callback={this.handleCallback}
-              />
+        <CardContainer>
+          <p>Pagamento</p>
+          <FormContainer>
+            <Cards
+              number={number}
+              name={name}
+              expiry={expiry}
+              cvc={cvc}
+              focused={focused}
+              callback={this.handleCallback}
+            />
 
-              <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
-                <Input
+            <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
+              <Input
+                type="tel"
+                name="number"
+                className="form-control"
+                placeholder="Card Number"
+                pattern="[\d| ]{16,22}"
+                required
+                onChange={this.handleInputChange}
+                onFocus={this.handleInputFocus}
+              />
+              <p>E.g.: 49..., 51..., 36..., 37...</p>
+              <Input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Name"
+                required
+                onChange={this.handleInputChange}
+                onFocus={this.handleInputFocus}
+              />
+              <CardValidation>
+                <ExpiryInput
                   type="tel"
-                  name="number"
+                  name="expiry"
                   className="form-control"
-                  placeholder="Card Number"
-                  pattern="[\d| ]{16,22}"
+                  placeholder="Valid Thru"
+                  pattern="\d\d/\d\d"
                   required
                   onChange={this.handleInputChange}
                   onFocus={this.handleInputFocus}
                 />
-                <p>E.g.: 49..., 51..., 36..., 37...</p>
-                <Input
-                  type="text"
-                  name="name"
+                <CvcInput
+                  type="tel"
+                  name="cvc"
                   className="form-control"
-                  placeholder="Name"
+                  placeholder="CVC"
+                  pattern="\d{3,4}"
                   required
                   onChange={this.handleInputChange}
                   onFocus={this.handleInputFocus}
                 />
-                <CardValidation>
-                  <ExpiryInput
-                    type="tel"
-                    name="expiry"
-                    className="form-control"
-                    placeholder="Valid Thru"
-                    pattern="\d\d/\d\d"
-                    required
-                    onChange={this.handleInputChange}
-                    onFocus={this.handleInputFocus}
-                  />
-                  <CvcInput
-                    type="tel"
-                    name="cvc"
-                    className="form-control"
-                    placeholder="CVC"
-                    pattern="\d{3,4}"
-                    required
-                    onChange={this.handleInputChange}
-                    onFocus={this.handleInputFocus}
-                  />
-                </CardValidation>
-                <input type="hidden" name="issuer" value={issuer} />
-                <PayButton type="submit">FINALIZAR PAGAMENTO</PayButton>
-              </form>
-            </FormContainer>
-          </CardContainer>
-        )}
+              </CardValidation>
+              <input type="hidden" name="issuer" value={issuer} />
+              <PayButton type="submit">FINALIZAR PAGAMENTO</PayButton>
+            </form>
+          </FormContainer>
+        </CardContainer>
       </>
     );
   }
@@ -226,39 +212,4 @@ const PayButton = styled.button`
   position: absolute;
   left: 0;
   cursor: pointer;
-`;
-
-const PaymentConfirm = styled.div`
-  display: flex;
-  margin-top: 25px;
-  flex-direction: column;
-  & > div {
-    display: flex;
-  }
-  & > h6 {
-    margin-bottom: 15px;
-    font-size: 20px;
-    color: #8e8e8e;
-  }
-`;
-const Icon = styled(BsFillCheckCircleFill)`
-  color: #36b853;
-  font-size: 48px;
-`;
-const Box = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  margin-left: 10px;
-  & > p {
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 5px;
-    color: #454545;
-  }
-  & > span {
-    font-size: 16px;
-    font-weight: 400;
-    color: #454545;
-  }
 `;
