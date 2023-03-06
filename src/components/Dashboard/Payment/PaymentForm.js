@@ -40,7 +40,7 @@ export default class PaymentForm extends React.Component {
     this.setState({ [target.name]: target.value });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async(e) => {
     e.preventDefault();
     const { issuer } = this.state;
     const formData = [...e.target.elements]
@@ -51,26 +51,24 @@ export default class PaymentForm extends React.Component {
       }, {});
 
     try {
+      const number = this.state.number.replace(/\s+/g, '');
       const body = {
         ticketId: this.props.ticket.id,
         cardData: {
           issuer: issuer,
-          number: this.state.number,
+          number: number,
           name: this.state.name,
           expirationDate: this.state.expiry,
           cvv: this.state.cvc,
         },
       };
 
-      this.props.savePayment(body);
+      await this.props.savePayment(body);
       this.props.setConfirmPayment(true);
       toast('Pagamento realizado com sucesso!');
     } catch (error) {
       toast('Não foi possível salvar suas informações!');
     }
-
-    this.setState({ formData });
-    this.form.reset();
   };
 
   render() {
