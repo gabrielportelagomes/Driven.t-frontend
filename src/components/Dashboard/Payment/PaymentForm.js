@@ -51,17 +51,18 @@ export default class PaymentForm extends React.Component {
       }, {});
 
     try {
+      const number = this.state.number.replace(/\s+/g, '');
       const body = {
         ticketId: this.props.ticket.id,
         cardData: {
           issuer: issuer,
-          number: this.state.number,
+          number: number,
           name: this.state.name,
           expirationDate: this.state.expiry,
           cvv: this.state.cvc,
         },
       };
-
+ 
       this.props.savePayment(body);
       this.props.setConfirmPayment(true);
       toast('Pagamento realizado com sucesso!');
