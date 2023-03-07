@@ -7,6 +7,8 @@ import PaymentForm from './PaymentForm';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { getPayment } from '../../../services/paymentApi';
 import useToken from '../../../hooks/useToken';
+import { useContext } from 'react';
+import UserContext from '../../../contexts/UserContext';
 
 export default function FinalPayment() {
   const { ticket } = useTicket();
@@ -14,12 +16,14 @@ export default function FinalPayment() {
   const token = useToken();
   const [confirmPayment, setConfirmPayment] = useState(false);
   const [paymentData, setPaymentData] = useState(undefined);
-
+  const { setConfirmedPayment } = useContext(UserContext);
   useEffect(() => {
     if (ticket) {
       getPayment(ticket.id, token)
         .then((response) => {
           setPaymentData(response);
+          setTimeout(() => setConfirmedPayment(true), 0);
+          //setConfirmedPayment(true);
         })
         .catch((error) => {
           setPaymentData({ id: undefined });
@@ -66,7 +70,6 @@ const PaymentContainer = styled.div`
     color: #8e8e8e;
   }
 `;
-
 const PaymentConfirm = styled.div`
   display: flex;
   margin-top: 25px;
