@@ -2,9 +2,13 @@ import { useContext } from 'react';
 import styled from 'styled-components';
 import Hotel from '../../../components/Dashboard/Hotel/Hotel';
 import UserContext from '../../../contexts/UserContext';
+import useTicket from '../../../hooks/api/useTicket';
 
 export default function HotelResume() {
-  const { confirmedPayment } = useContext(UserContext);
+  const { confirmedPayment } = useContext(UserContext);  
+  const ticketModality = localStorage.getItem('ticket');
+  const ticketModalityObject = JSON.parse(ticketModality);  
+    
   if (!confirmedPayment) {
     return (
       <EmptyContainer>
@@ -15,6 +19,17 @@ export default function HotelResume() {
       </EmptyContainer>
     );
   }
+  if (ticketModalityObject.ticketTypeId === 1 || ticketModalityObject.ticketTypeId === 2) {
+    return (
+      <EmptyContainer>
+        <h1>Escolha de hotel e quarto</h1>
+        <div>
+          <p style = {{ width: '510px' }}>Sua modalidade de ingresso não inclui hospedagem Prossiga para a escolha de atividades</p>
+        </div>
+      </EmptyContainer>
+    );
+  }
+  
   return <Hotel />;
 }
 

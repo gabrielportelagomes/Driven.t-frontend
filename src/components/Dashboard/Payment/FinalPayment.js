@@ -11,16 +11,17 @@ import { useContext } from 'react';
 import UserContext from '../../../contexts/UserContext';
 
 export default function FinalPayment() {
-  const { ticket } = useTicket();
+  const { ticket } = useTicket();    
+  localStorage.setItem('ticket', JSON.stringify(ticket));       
   const { savePayment } = useSavePayment();
   const token = useToken();
   const [confirmPayment, setConfirmPayment] = useState(false);
   const [paymentData, setPaymentData] = useState(undefined);
   const { setConfirmedPayment } = useContext(UserContext);
   useEffect(() => {
-    if (ticket) {
+    if (ticket) {      
       getPayment(ticket.id, token)
-        .then((response) => {
+        .then((response) => {             
           setPaymentData(response);
           setTimeout(() => setConfirmedPayment(true), 0);
           //setConfirmedPayment(true);
@@ -30,10 +31,10 @@ export default function FinalPayment() {
         });
     }
   }, [ticket]);
-
+  
   if (ticket && paymentData) {
     const { name, price } = ticket.TicketType;
-
+    
     return (
       <PaymentContainer>
         <p>Ingresso escolhido</p>
