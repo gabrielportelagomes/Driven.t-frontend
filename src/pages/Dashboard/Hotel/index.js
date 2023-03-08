@@ -2,12 +2,13 @@ import { useContext } from 'react';
 import styled from 'styled-components';
 import Hotel from '../../../components/Dashboard/Hotel/Hotel';
 import UserContext from '../../../contexts/UserContext';
-import useTicket from '../../../hooks/api/useTicket';
+import useHotels from '../../../hooks/api/useHotels';
 
 export default function HotelResume() {
   const { confirmedPayment } = useContext(UserContext);  
   const ticketModality = localStorage.getItem('ticket');
-  const ticketModalityObject = JSON.parse(ticketModality);  
+  const ticketModalityObject = JSON.parse(ticketModality);
+  const { hotels } = useHotels();
     
   if (!confirmedPayment) {
     return (
@@ -30,7 +31,7 @@ export default function HotelResume() {
     );
   }
   
-  return <Hotel />;
+  return <Hotel hotels={hotels}/>;
 }
 
 const EmptyContainer = styled.div`
