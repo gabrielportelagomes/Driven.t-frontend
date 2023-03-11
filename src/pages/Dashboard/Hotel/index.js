@@ -1,15 +1,33 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Hotel from '../../../components/Dashboard/Hotel/Hotel';
 import UserContext from '../../../contexts/UserContext';
 import useHotels from '../../../hooks/api/useHotels';
+import useTicket from '../../../hooks/api/useTicket';
+import useToken from '../../../hooks/useToken';
+import { getPayment } from '../../../services/paymentApi';
 
 export default function HotelResume() {
-  const { confirmedPayment } = useContext(UserContext);  
+  const [confirmedPayment, setConfirmedPayment] = useState(false);
   const ticketModality = localStorage.getItem('ticket');
   const ticketModalityObject = JSON.parse(ticketModality);
   const { hotels } = useHotels();
-    
+  const token = useToken();
+  const { ticket } = useTicket();
+
+  useEffect(() => {
+    if (ticket) {
+      getPayment(ticket.id, token)
+        .then((response) => {
+          setTimeout(() => setConfirmedPayment(true), 0);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [ticket]);
+
+  console.log(confirmedPayment);
   if (!confirmedPayment) {
     return (
       <EmptyContainer>
@@ -25,13 +43,15 @@ export default function HotelResume() {
       <EmptyContainer>
         <h1>Escolha de hotel e quarto</h1>
         <div>
-          <p style = {{ width: '510px' }}>Sua modalidade de ingresso não inclui hospedagem Prossiga para a escolha de atividades</p>
+          <p style={{ width: '510px' }}>
+            Sua modalidade de ingresso não inclui hospedagem Prossiga para a escolha de atividades
+          </p>
         </div>
       </EmptyContainer>
     );
   }
-  
-  return <Hotel hotels={hotels}/>;
+
+  return <Hotel hotels={hotels} />;
 }
 
 const EmptyContainer = styled.div`
