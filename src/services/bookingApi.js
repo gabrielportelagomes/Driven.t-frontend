@@ -1,19 +1,16 @@
 import api from './api';
 
-async function fetchBooking(token) {
-  try {
-    const response = await api.get('/booking', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(`Failed to fetch bookings. ${error.message}`);
-  }
+export async function getBookingByRoomId(token, roomId) {
+  const response = await api.get(`/booking/${roomId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 }
 
-async function saveBooking(body, token) {
+export async function saveBooking(body, token) {
   const response = await api.post('/booking', body, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -23,5 +20,22 @@ async function saveBooking(body, token) {
   return response.data;
 }
 
-export { fetchBooking, saveBooking };
+export async function getBookingSummary(token) {
+  const response = await api.get('/booking/summary', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
+  return response.data;
+}
+
+export async function updateBooking(bookingId, body, token) {
+  const response = await api.put(`/booking/${bookingId}`, body, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
