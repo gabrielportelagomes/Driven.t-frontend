@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import useSaveBooking from '../../../hooks/api/useSaveBooking';
 import CardHotel from './CardHotel';
 import CardRoom from './CardRoom';
 
@@ -7,7 +9,21 @@ export default function Hotel({ hotels }) {
   const [selectedHotel, setSelectedHotel] = useState(undefined);
   const [roomsData, setRoomsData] = useState(undefined);
   const [selectedRoom, setSelectedRoom] = useState(undefined);
- 
+  const { saveBookingLoading, saveBooking } = useSaveBooking();
+
+  async function bookingRoom() {
+    try {
+      const body = {
+        roomId: selectedRoom,
+      };
+
+      await saveBooking(body);
+      toast('Informações salvas com sucesso!');
+    } catch (error) {
+      toast('Não foi possível salvar suas informações!');
+    }
+  }
+
   if (hotels) {
     return (
       <>
@@ -22,6 +38,7 @@ export default function Hotel({ hotels }) {
                 selectedHotel={selectedHotel}
                 setSelectedHotel={setSelectedHotel}
                 setRoomsData={setRoomsData}
+                setSelectedRoom={setSelectedRoom}
               />
             ))}
           </div>
@@ -36,6 +53,9 @@ export default function Hotel({ hotels }) {
                 );
               })}
             </div>
+            <BookingButton onClick={() => bookingRoom()} disabled={!selectedRoom || saveBookingLoading}>
+              RESERVAR QUARTO
+            </BookingButton>
           </RoomsContainer>
         )}
       </>
@@ -71,4 +91,17 @@ const RoomsContainer = styled.div`
     margin-bottom: 33px;
     margin-top: 52px;
   }
+`;
+
+const BookingButton = styled.button`
+  width: 182px;
+  height: 37px;
+  border: none;
+  background: #e0e0e0;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  margin-top: 38px;
+  margin-bottom: 100px;
+  font-size: 14px;
+  cursor: ${(props) => (props.disabled ? 'cursor' : 'pointer')};
 `;

@@ -11,9 +11,9 @@ export default function CardRoom({ room, selectedRoom, setSelectedRoom }) {
     if (bookingByRoomId) {
       for (let i = 0; i < room.capacity; i++) {
         if (i < bookingByRoomId.result._count.Booking) {
-          setRoomCapacity((roomCapacity) => [...roomCapacity, true]);
+          setRoomCapacity((roomCapacity) => [...roomCapacity, 'unavailable']);
         } else {
-          setRoomCapacity((roomCapacity) => [false, ...roomCapacity]);
+          setRoomCapacity((roomCapacity) => ['available', ...roomCapacity]);
         }
       }
     }
@@ -21,6 +21,13 @@ export default function CardRoom({ room, selectedRoom, setSelectedRoom }) {
 
   function selectRoom() {
     setSelectedRoom(room.id);
+    let index = roomCapacity.length - 1;
+
+    if (roomCapacity.indexOf('unavailable') !== -1) {
+      index = roomCapacity.indexOf('unavailable') - 1;
+    }
+
+    roomCapacity[index] = 'selected';
   }
 
   if (!bookingByRoomId) {
@@ -36,12 +43,12 @@ export default function CardRoom({ room, selectedRoom, setSelectedRoom }) {
       <RoomName>{room.name}</RoomName>
       <CapacityContainer>
         {roomCapacity.map((booked, index) => {
-          return booked ? (
-            <Icon key={index}>
+          return booked === 'available' || (booked === 'selected' && selectedRoom !== room.id) ? (
+            <BsPerson key={index} />
+          ) : (
+            <Icon key={index} isSelected={room.id === selectedRoom} booked={booked}>
               <BsPersonFill />
             </Icon>
-          ) : (
-            <BsPerson key={index} />
           );
         })}
       </CapacityContainer>
@@ -83,4 +90,5 @@ const Icon = styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: ${(props) => (props.booked === 'selected' ? '#ff4791' : '#000000')}; ;
 `;

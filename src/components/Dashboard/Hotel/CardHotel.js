@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import useRooms from '../../../hooks/api/useRooms';
 
-export default function CardHotel({ hotel, selectedHotel, setSelectedHotel, setRoomsData }) {
+export default function CardHotel({ hotel, selectedHotel, setSelectedHotel, setRoomsData, setSelectedRoom }) {
   const { rooms } = useRooms(hotel.id);
 
   if (rooms) {
@@ -45,6 +45,7 @@ export default function CardHotel({ hotel, selectedHotel, setSelectedHotel, setR
     function showRooms(hotelId, roomsInfo) {
       setSelectedHotel(hotelId);
       setRoomsData(roomsInfo);
+      setSelectedRoom(undefined);
     }
 
     return (
