@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import BookingSummary from '../../../components/Dashboard/Hotel/BookingSummary';
 import Hotel from '../../../components/Dashboard/Hotel/Hotel';
 import UserContext from '../../../contexts/UserContext';
+import useBookingSummary from '../../../hooks/api/useBookingSummary';
 import useHotels from '../../../hooks/api/useHotels';
 import useTicket from '../../../hooks/api/useTicket';
 import useToken from '../../../hooks/useToken';
@@ -14,6 +16,7 @@ export default function HotelResume() {
   const { hotels } = useHotels();
   const token = useToken();
   const { ticket } = useTicket();
+  const { bookingSummary } = useBookingSummary();
 
   useEffect(() => {
     if (ticket) {
@@ -26,6 +29,15 @@ export default function HotelResume() {
         });
     }
   }, [ticket]);
+
+  if (bookingSummary) {
+    return (
+      <>
+        <BookingSummary bookingSummary={bookingSummary} />
+        <ChangeRoomButton>TROCAR DE QUARTO</ChangeRoomButton>
+      </>
+    );
+  }
 
   if (!confirmedPayment) {
     return (
@@ -73,4 +85,17 @@ const EmptyContainer = styled.div`
     font-size: 34px;
     font-weight: 400;
   }
+`;
+
+const ChangeRoomButton = styled.button`
+  width: 182px;
+  height: 37px;
+  border: none;
+  background: #e0e0e0;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  margin-top: 38px;
+  margin-bottom: 100px;
+  font-size: 14px;
+  cursor: pointer;
 `;
