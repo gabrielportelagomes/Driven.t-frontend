@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import useSaveBooking from '../../../hooks/api/useSaveBooking';
-import useToken from '../../../hooks/useToken';
+import useUpdateBooking from '../../../hooks/api/useUpdateBooking';
 import CardHotel from './CardHotel';
 import CardRoom from './CardRoom';
 
-export default function Hotel({ hotels }) {
+export default function Hotel({ hotels, changeRoom, setChangeRoom, bookingSummary, setBookRoom }) {
   const [selectedHotel, setSelectedHotel] = useState(undefined);
   const [roomsData, setRoomsData] = useState(undefined);
   const [selectedRoom, setSelectedRoom] = useState(undefined);
   const { saveBookingLoading, saveBooking } = useSaveBooking();
+  const { updateBooking } = useUpdateBooking();
 
   async function bookingRoom() {
     try {
@@ -20,9 +21,29 @@ export default function Hotel({ hotels }) {
 
       await saveBooking(body);
       toast('Informações salvas com sucesso!');
+      setBookRoom(true);
     } catch (error) {
       toast('Não foi possível salvar suas informações!');
     }
+  }
+
+  async function updateRoom() {
+    try {
+      const body = {
+        roomId: selectedRoom,
+      };
+      const bookingId = bookingSummary.booking.id;
+
+      await updateBooking(bookingId, body);
+      toast('Informações salvas com sucesso!');
+      setChangeRoom(false);
+    } catch (error) {
+      toast('Não foi possível salvar suas informações!');
+    }
+  }
+
+  async function cancelUpdate() {
+    setChangeRoom(false);
   }
 
   if (hotels) {
@@ -43,6 +64,7 @@ export default function Hotel({ hotels }) {
               />
             ))}
           </div>
+          {!selectedHotel && <CancelButton onClick={() => cancelUpdate()}>CANCELAR</CancelButton>}
         </HotelsContainer>
         {selectedHotel && (
           <RoomsContainer>
@@ -54,9 +76,18 @@ export default function Hotel({ hotels }) {
                 );
               })}
             </div>
-            <BookingButton onClick={() => bookingRoom()} disabled={!selectedRoom || saveBookingLoading}>
-              RESERVAR QUARTO
-            </BookingButton>
+            {changeRoom ? (
+              <>
+                <BookingButton onClick={() => updateRoom()} disabled={!selectedRoom || saveBookingLoading}>
+                  TROCAR DE QUARTO
+                </BookingButton>
+                <CancelButton onClick={() => cancelUpdate()}>CANCELAR</CancelButton>
+              </>
+            ) : (
+              <BookingButton onClick={() => bookingRoom()} disabled={!selectedRoom || saveBookingLoading}>
+                RESERVAR QUARTO
+              </BookingButton>
+            )}
           </RoomsContainer>
         )}
       </>
@@ -103,6 +134,11 @@ const BookingButton = styled.button`
   border-radius: 4px;
   margin-top: 38px;
   margin-bottom: 100px;
+  margin-right: 80px;
   font-size: 14px;
   cursor: ${(props) => (props.disabled ? 'cursor' : 'pointer')};
+`;
+
+const CancelButton = styled(BookingButton)`
+  width: 120px;
 `;

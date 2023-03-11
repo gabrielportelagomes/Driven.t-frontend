@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import BookingSummary from '../../../components/Dashboard/Hotel/BookingSummary';
 import Hotel from '../../../components/Dashboard/Hotel/Hotel';
-import UserContext from '../../../contexts/UserContext';
 import useBookingSummary from '../../../hooks/api/useBookingSummary';
 import useHotels from '../../../hooks/api/useHotels';
 import useTicket from '../../../hooks/api/useTicket';
@@ -16,7 +15,9 @@ export default function HotelResume() {
   const { hotels } = useHotels();
   const token = useToken();
   const { ticket } = useTicket();
-  const { bookingSummary } = useBookingSummary();
+  const { bookingSummary, getbookingSummary } = useBookingSummary();
+  const [changeRoom, setChangeRoom] = useState(false);
+  const [bookRoom, setBookRoom] = useState(false);
 
   useEffect(() => {
     if (ticket) {
@@ -30,11 +31,15 @@ export default function HotelResume() {
     }
   }, [ticket]);
 
-  if (bookingSummary) {
+  useEffect(() => {
+    getbookingSummary();
+  }, [changeRoom, bookRoom]);
+
+  if (bookingSummary && !changeRoom) {
     return (
       <>
         <BookingSummary bookingSummary={bookingSummary} />
-        <ChangeRoomButton>TROCAR DE QUARTO</ChangeRoomButton>
+        <ChangeRoomButton onClick={() => setChangeRoom(true)}>TROCAR DE QUARTO</ChangeRoomButton>
       </>
     );
   }
@@ -62,7 +67,15 @@ export default function HotelResume() {
     );
   }
 
-  return <Hotel hotels={hotels} />;
+  return (
+    <Hotel
+      hotels={hotels}
+      changeRoom={changeRoom}
+      setChangeRoom={setChangeRoom}
+      bookingSummary={bookingSummary}
+      setBookRoom={setBookRoom}
+    />
+  );
 }
 
 const EmptyContainer = styled.div`

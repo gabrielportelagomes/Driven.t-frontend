@@ -14,15 +14,15 @@ export default function BookingSummary({ bookingSummary }) {
       setCapacity('Triple');
     }
 
-    if (bookingSummary === 1) {
+    if (bookingSummary.count.Booking === 1) {
       setOccupation('Apenas você');
-    } else if (bookingSummary === 2) {
+    } else if (bookingSummary.count.Booking === 2) {
       setOccupation('Você e mais 1');
     } else {
       setOccupation('Você e mais 2');
     }
   }, []);
-  console.log(bookingSummary);
+
   return (
     <Container>
       <h1>Escolha de hotel e quarto</h1>
