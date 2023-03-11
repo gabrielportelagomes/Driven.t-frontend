@@ -1,41 +1,35 @@
 import styled from 'styled-components';
-import api from '../../../services/api';
-import useToken from '../../../hooks/useToken';
-import { useState } from 'react';
+import useSaveBooking from '../../../hooks/api/useSaveBooking';
 
-export default function BookingCard({ hotel, room }) {
-  const [booking, setBooking] = useState(null);
-  const token = useToken();
-
+export default function BookingCard({ resultBooking, room }) {
+  console.log(resultBooking, 'resultBooking');
+  const { saveBooking } = useSaveBooking();
   async function handleBooking() {
     try {
-      const result = await api.get('/booking', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setBooking(result.data);
-      console.log(result.data);
+      const result = await saveBooking();
+      console.log(result);
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
     }
   }
 
   return (
     <>
-      <HotelsContainer>
-        <h1>Escolha hotel e quarto</h1>
-        <span>Você já escolheu seu quarto:</span>
-        <Card>
-          <img src="image" alt="hotel" />
-          <h2>Nome Hotel</h2>
-          <h3>Quarto reservado</h3>
-          <p>101 (double)</p>
-          <h3>Pessoas no seu quarto</h3>
-          <p>Você e mais 2</p>
-        </Card>
-        <Button onClick={handleBooking}>TROCAR DE QUARTO</Button>
-      </HotelsContainer>
+      {resultBooking && (
+        <HotelsContainer>
+          <h1>Escolha hotel e quarto</h1>
+          <span>Você já escolheu seu quarto:</span>
+          <Card>
+            <img src="image" alt="hotel" />
+            <h2>Nome Hotel</h2>
+            <h3>Quarto reservado</h3>
+            <p>101 (double)</p>
+            <h3>Pessoas no seu quarto</h3>
+            <p>Você e mais 2</p>
+          </Card>
+          <Button onClick={handleBooking}>TROCAR DE QUARTO</Button>
+        </HotelsContainer>
+      )}
     </>
   );
 }

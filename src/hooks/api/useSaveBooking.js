@@ -1,4 +1,4 @@
-import { bookingApi } from '../../services/bookingApi';
+import * as bookingApi from '../../services/bookingApi';
 import useAsync from '../useAsync';
 import useToken from '../useToken';
 
@@ -10,7 +10,7 @@ export default function useSaveBooking() {
     loading: saveBookingLoading,
     error: saveBookingError,
     act: saveBooking,
-  } = useAsync(() => bookingApi.saveBooking(token), false);
+  } = useAsync((data) => bookingApi.saveBooking(data, token), false);
 
   return {
     booking,
