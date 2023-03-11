@@ -5,8 +5,9 @@ import CardRoom from './CardRoom';
 
 export default function Hotel({ hotels }) {
   const [selectedHotel, setSelectedHotel] = useState(undefined);
-  console.log(selectedHotel);
-
+  const [roomsData, setRoomsData] = useState(undefined);
+  const [selectedRoom, setSelectedRoom] = useState(undefined);
+ 
   if (hotels) {
     return (
       <>
@@ -20,14 +21,23 @@ export default function Hotel({ hotels }) {
                 hotel={hotel}
                 selectedHotel={selectedHotel}
                 setSelectedHotel={setSelectedHotel}
+                setRoomsData={setRoomsData}
               />
             ))}
           </div>
         </HotelsContainer>
-        <RoomsContainer>
-          <p>Ótima pedida! Agora escolha seu quarto:</p>
-          <CardRoom />
-        </RoomsContainer>
+        {selectedHotel && (
+          <RoomsContainer>
+            <p>Ótima pedida! Agora escolha seu quarto:</p>
+            <div>
+              {roomsData.map((room) => {
+                return (
+                  <CardRoom key={room.id} room={room} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom} />
+                );
+              })}
+            </div>
+          </RoomsContainer>
+        )}
       </>
     );
   }
@@ -53,6 +63,7 @@ const HotelsContainer = styled.div`
 const RoomsContainer = styled.div`
   & > div {
     display: flex;
+    flex-wrap: wrap;
   }
   & > p {
     font-size: 20px;
