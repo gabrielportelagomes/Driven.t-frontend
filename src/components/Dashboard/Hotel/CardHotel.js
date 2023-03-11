@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import useRooms from '../../../hooks/api/useRooms';
 
-export default function Hotel({ hotel }) {
-  const { rooms } = useRooms(hotel.id);
+export default function Hotel({ hotel, setSelectedHotel }) {
+  const { rooms } = useRooms(hotel.id);  
   if (rooms) {
     function definirTipos() {
       let frase = '';
@@ -39,7 +39,7 @@ export default function Hotel({ hotel }) {
       return vagas;
     }
     return (
-      <Card>
+      <Card onClick = { () => setSelectedHotel(hotel.id - 1) }>
         <img src={hotel.image} alt="hotel" />
         <h1>{hotel.name}</h1>
         <h2>Tipos de acomodação</h2>
