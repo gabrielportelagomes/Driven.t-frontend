@@ -35,7 +35,7 @@ const Text = styled.p`
   }
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
