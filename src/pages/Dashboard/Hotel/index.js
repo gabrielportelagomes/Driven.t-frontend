@@ -27,7 +27,6 @@ export default function HotelResume() {
     }
   }, [ticket]);
 
-  console.log(confirmedPayment);
   if (!confirmedPayment) {
     return (
       <EmptyContainer>
