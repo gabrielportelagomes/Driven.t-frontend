@@ -25,6 +25,8 @@ export default function SignIn() {
   const { eventInfo } = useContext(EventInfoContext);
   const { setUserData } = useContext(UserContext);
 
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   async function submit(event) {
@@ -46,13 +48,18 @@ export default function SignIn() {
 
     if (code) {
       const body = { code };
+      setLoading(true);
 
       try {
         const userData = await githubAuth(body);
         setUserData(userData);
+        setLoading(false);
+        toast('Login realizado com sucesso!');
         navigate('/dashboard');
       } catch (error) {
         toast('Não foi possível fazer o login!');
+        setLoading(false);
+        navigate('/sign-in');
       }
     }
   }, []);
@@ -66,21 +73,29 @@ export default function SignIn() {
       <Row>
         <Label>Entrar</Label>
         <form onSubmit={submit}>
-          <Input label="E-mail" type="text" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            label="E-mail"
+            type="text"
+            fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loadingSignIn || loading}
+          />
           <Input
             label="Senha"
             type="password"
             fullWidth
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={loadingSignIn || loading}
           />
-          <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>
+          <Button type="submit" color="primary" fullWidth disabled={loadingSignIn || loading}>
             Entrar
           </Button>
         </form>
       </Row>
       <Row>
-        <GitHubAuth />
+        <GitHubAuth loading={loading} loadingSignIn={loadingSignIn} />
       </Row>
       <Row>
         <Link to="/enroll">Não possui login? Inscreva-se</Link>
