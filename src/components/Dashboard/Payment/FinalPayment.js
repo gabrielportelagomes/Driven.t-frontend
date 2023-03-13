@@ -11,17 +11,17 @@ import { useContext } from 'react';
 import UserContext from '../../../contexts/UserContext';
 
 export default function FinalPayment() {
-  const { ticket } = useTicket();    
-  localStorage.setItem('ticket', JSON.stringify(ticket));       
+  const { ticket } = useTicket();
+  localStorage.setItem('ticket', JSON.stringify(ticket));
   const { savePayment } = useSavePayment();
   const token = useToken();
   const [confirmPayment, setConfirmPayment] = useState(false);
   const [paymentData, setPaymentData] = useState(undefined);
   const { setConfirmedPayment } = useContext(UserContext);
   useEffect(() => {
-    if (ticket) {      
+    if (ticket) {
       getPayment(ticket.id, token)
-        .then((response) => {             
+        .then((response) => {
           setPaymentData(response);
           setTimeout(() => setConfirmedPayment(true), 0);
           //setConfirmedPayment(true);
@@ -31,15 +31,22 @@ export default function FinalPayment() {
         });
     }
   }, [ticket]);
-  
+
   if (ticket && paymentData) {
     const { name, price } = ticket.TicketType;
-    
+    let newName = name;
+
+    if (name === 'Presencial Com Hotel') {
+      newName = 'Presencial + Com Hotel';
+    } else if (name === 'Presencial Sem Hotel') {
+      newName = 'Presencial + Sem Hotel';
+    }
+
     return (
       <PaymentContainer>
         <p>Ingresso escolhido</p>
         <ButtonSummary>
-          <h1>{name}</h1>
+          <h1>{newName}</h1>
           <p>R$ {price / 100}</p>
         </ButtonSummary>
         {confirmPayment || paymentData.id ? (
