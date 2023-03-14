@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import ChooseActivies from '../../../components/Dashboard/Activity/ChooseActivies';
 import usePayment from '../../../hooks/api/usePayment';
+import useActivityType from '../../../hooks/api/useSaveActivity';
 import useTicket from '../../../hooks/api/useTicket';
 
 export default function Activities() {
   const { ticket } = useTicket();
   const { getPayment } = usePayment();
+  const { activityType } = useActivityType();
   const [confirmedPayment, setConfirmedPayment] = useState(false);
+  const [filterActivity, setFilterActivity] = useState(undefined);
 
   useEffect(() => {
     if (ticket) {
@@ -44,7 +48,7 @@ export default function Activities() {
     );
   }
 
-  return <></>;
+  return <ChooseActivies  activityType={activityType} filterActivity={filterActivity} setFilterActivity={setFilterActivity}/>;
 }
 
 const EmptyContainer = styled.div`
