@@ -31,6 +31,19 @@ export default function Activities() {
     );
   }
 
+  if (ticket && ticket.ticketTypeId === 1) {
+    return (
+      <EmptyContainer>
+        <h1>Escolha de atividades</h1>
+        <div>
+          <p style={{ width: '510px' }}>
+            Sua modalidade de ingresso não necessita escolher atividade. Você terá acesso a todas as atividades.
+          </p>
+        </div>
+      </EmptyContainer>
+    );
+  }
+
   return <></>;
 }
 
