@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { VscGithubInverted } from 'react-icons/vsc';
 import qs from 'querystringify';
 
-export default function GitHubAuth() {
+export default function GitHubAuth({ loading, loadingSignIn }) {
   function redirectToGitHub() {
     const params = {
       response_type: 'code',
@@ -16,7 +16,7 @@ export default function GitHubAuth() {
     window.location.href = authURL;
   }
   return (
-    <Button onClick={() => redirectToGitHub()}>
+    <Button onClick={() => redirectToGitHub()} disabled={loadingSignIn || loading}>
       <Icon>
         <VscGithubInverted />
       </Icon>
