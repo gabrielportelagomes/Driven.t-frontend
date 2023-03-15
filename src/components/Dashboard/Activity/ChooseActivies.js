@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import ActivitiesList from './ActivitiesList';
 
 export default function ChooseActivies({ activityType, filterActivity, setFilterActivity }) {
   if (!activityType) {
@@ -18,6 +19,7 @@ export default function ChooseActivies({ activityType, filterActivity, setFilter
             );
           })}
         </div>
+        <ActivitiesList filterActivity={filterActivity} activityType={activityType} />
       </ActivitiesContainer>
     </>
   );
