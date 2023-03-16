@@ -24,8 +24,10 @@ export default function DayActivities({ activity }) {
             <h2>{activity.name}</h2>
             <p>{activity.schedules}</p>
           </div>
-          <div></div>
-          <p>vagas</p>
+          { activity.capacity !== 0 ?  
+            <Vacancy style={{ fontSize: '30px', color: '#078632' }}><div ><ion-icon name="log-in-outline"></ion-icon></div><p style={{ color: '#078632' }}>{activity.capacity} vagas</p></Vacancy> :
+            <Vacancy disabled={true} ><div><ion-icon style={{ fontSize: '30px', color: 'red' }} name="close-circle-outline"></ion-icon></div><p style={{ color: 'red' }}>Esgotado</p></Vacancy>           
+          }           
         </ActivityInformation>
       </ContainerInformations>
     </ContainerPlace>
@@ -73,7 +75,15 @@ const ActivityInformation = styled.div`
   }
 
   p {
+    width: 75px;
     font-size: 12px;
     color: #343434;
   }
+`;
+const Vacancy = styled.button`
+border: none;
+border-left: 1px solid #cfcfcf;
+cursor: pointer;
+margin-left: 5px;
+
 `;
