@@ -48,7 +48,7 @@ const ActivityInformation = styled.div`
   display: flex;
   padding: 10px;
   border-radius: 5px;
-
+  margin-bottom: 10px;
   div:nth-child(2) {
     width: 1px;
     height: ${(props) => `${props.activityHeight - 20}px`};

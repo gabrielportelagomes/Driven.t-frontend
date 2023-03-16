@@ -25,7 +25,7 @@ const ContainerPlace = styled.div`
 
 const ContainerInformations = styled.div`
   width: 288px;
-  height: 390px;
+  height: 600px;
   border: 1px solid #d7d7d7;
   margin-top: 13px;
   padding: 10px;
