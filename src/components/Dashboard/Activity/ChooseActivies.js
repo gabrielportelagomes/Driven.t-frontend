@@ -5,15 +5,24 @@ export default function ChooseActivies({ activityType, filterActivity, setFilter
   if (!activityType) {
     return 'carregando...';
   }
+
+  let activitiesByDate = [];
+  let activitiesInfo = [];
+  activityType.map((item) => {
+    if(!activitiesByDate.includes(item.activityDate)) {
+      activitiesByDate.push(item.activityDate);
+      activitiesInfo.push(item);
+    }
+  });
   return (
     <>
       <ActivitiesContainer>
         <h1>Escolha de atividades</h1>
         <p>Primeiro, filtre pelo dia do evento:</p>
         <div>
-          {activityType.map((item) => {
+          {activitiesInfo.map((item) => {
             return (
-              <Button key={item.id} isSelected={item.id === filterActivity} onClick={() => setFilterActivity(item.id)}>
+              <Button key={item.id} isSelected={item.id === filterActivity} onClick={() => setFilterActivity(item.activityDate)}>
                 {item.activityDate}
               </Button>
             );
