@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ChooseActivies from '../../../components/Dashboard/Activity/ChooseActivies';
 import usePayment from '../../../hooks/api/usePayment';
-import useActivityType from '../../../hooks/api/useSaveActivity';
+import useActivityType from '../../../hooks/api/useActivityType';
 import useTicket from '../../../hooks/api/useTicket';
+import useUserActivities from '../../../hooks/api/useActivity';
+import UserContext from '../../../contexts/UserContext';
 
 export default function Activities() {
   const { ticket } = useTicket();
@@ -11,6 +13,15 @@ export default function Activities() {
   const { activityType } = useActivityType();
   const [confirmedPayment, setConfirmedPayment] = useState(false);
   const [filterActivity, setFilterActivity] = useState(undefined);
+  const [isSelectedDay, setselectedDay] = useState(undefined);
+  const { userActivities } = useUserActivities();
+  const { setUserActivitiesData } = useContext(UserContext);
+
+  useEffect(() => {
+    if (userActivities) {
+      setUserActivitiesData(userActivities);
+    }
+  }, [userActivities]);
 
   useEffect(() => {
     if (ticket) {
@@ -48,7 +59,15 @@ export default function Activities() {
     );
   }
 
-  return <ChooseActivies  activityType={activityType} filterActivity={filterActivity} setFilterActivity={setFilterActivity}/>;
+  return (
+    <ChooseActivies
+      activityType={activityType}
+      filterActivity={filterActivity}
+      setFilterActivity={setFilterActivity}
+      isSelectedDay={isSelectedDay}
+      setselectedDay={setselectedDay}
+    />
+  );
 }
 
 const EmptyContainer = styled.div`

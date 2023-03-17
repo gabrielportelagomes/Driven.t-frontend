@@ -9,9 +9,19 @@ export default UserContext;
 export function UserProvider({ children }) {
   const [userData, setUserData] = useLocalStorage('userData', {});
   const [confirmedPayment, setConfirmedPayment] = useState(null);
+  const [userActivitiesData, setUserActivitiesData] = useState(undefined);
 
   return (
-    <UserContext.Provider value={{ userData, setUserData, confirmedPayment, setConfirmedPayment }}>
+    <UserContext.Provider
+      value={{
+        userData,
+        setUserData,
+        confirmedPayment,
+        setConfirmedPayment,
+        userActivitiesData,
+        setUserActivitiesData,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
