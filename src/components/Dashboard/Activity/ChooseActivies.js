@@ -1,7 +1,13 @@
 import styled from 'styled-components';
 import ActivitiesList from './ActivitiesList';
 
-export default function ChooseActivies({ activityType, filterActivity, setFilterActivity }) {
+export default function ChooseActivies({
+  activityType,
+  filterActivity,
+  setFilterActivity,
+  isSelectedDay,
+  setselectedDay,
+}) {
   if (!activityType) {
     return 'carregando...';
   }
@@ -9,11 +15,17 @@ export default function ChooseActivies({ activityType, filterActivity, setFilter
   let activitiesByDate = [];
   let activitiesInfo = [];
   activityType.map((item) => {
-    if(!activitiesByDate.includes(item.activityDate)) {
+    if (!activitiesByDate.includes(item.activityDate)) {
       activitiesByDate.push(item.activityDate);
       activitiesInfo.push(item);
     }
   });
+
+  function chooseDay(data, index) {
+    setFilterActivity(data);
+    setselectedDay(index);
+  }
+
   return (
     <>
       <ActivitiesContainer>
@@ -22,7 +34,11 @@ export default function ChooseActivies({ activityType, filterActivity, setFilter
         <div>
           {activitiesInfo.map((item) => {
             return (
-              <Button key={item.id} isSelected={item.id === filterActivity} onClick={() => setFilterActivity(item.activityDate)}>
+              <Button
+                key={item.id}
+                isSelected={item.id === isSelectedDay}
+                onClick={() => chooseDay(item.activityDate, item.id)}
+              >
                 {item.activityDate}
               </Button>
             );

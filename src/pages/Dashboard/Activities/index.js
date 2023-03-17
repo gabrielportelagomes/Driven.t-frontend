@@ -11,6 +11,7 @@ export default function Activities() {
   const { activityType } = useActivityType();
   const [confirmedPayment, setConfirmedPayment] = useState(false);
   const [filterActivity, setFilterActivity] = useState(undefined);
+  const [isSelectedDay, setselectedDay] = useState(undefined);
 
   useEffect(() => {
     if (ticket) {
@@ -48,7 +49,15 @@ export default function Activities() {
     );
   }
 
-  return <ChooseActivies  activityType={activityType} filterActivity={filterActivity} setFilterActivity={setFilterActivity}/>;
+  return (
+    <ChooseActivies
+      activityType={activityType}
+      filterActivity={filterActivity}
+      setFilterActivity={setFilterActivity}
+      isSelectedDay={isSelectedDay}
+      setselectedDay={setselectedDay}
+    />
+  );
 }
 
 const EmptyContainer = styled.div`
