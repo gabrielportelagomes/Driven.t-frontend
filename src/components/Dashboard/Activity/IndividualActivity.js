@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import UserContext from '../../../contexts/UserContext';
@@ -10,10 +10,16 @@ export default function IndividualActivity({ activity }) {
   const { saveActivity } = useSaveActivity();
   const { getUserActivities } = useUserActivities();
   const { userActivitiesData, setUserActivitiesData } = useContext(UserContext);
+  const [activitiesId, setActivitiesId] = useState([]);
 
-  const activitiesId = userActivitiesData.map((activity) => {
-    return activity.activityTypeId;
-  });
+  useEffect(() => {
+    if (userActivitiesData) {
+      const arrayActivitiesId = userActivitiesData.map((activity) => {
+        return activity.activityTypeId;
+      });
+      setActivitiesId(arrayActivitiesId);
+    }
+  }, [userActivitiesData]);
 
   function calculateDuration() {
     const start = activity.schedules.split('-')[0];
