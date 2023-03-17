@@ -1,6 +1,20 @@
+import { useContext } from 'react';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import UserContext from '../../../contexts/UserContext';
+import useSaveActivity from '../../../hooks/api/useSaveActivity';
+import { FaRegCheckCircle } from 'react-icons/fa';
+import useUserActivities from '../../../hooks/api/useActivity';
 
 export default function IndividualActivity({ activity }) {
+  const { saveActivity } = useSaveActivity();
+  const { getUserActivities } = useUserActivities();
+  const { userActivitiesData, setUserActivitiesData } = useContext(UserContext);
+
+  const activitiesId = userActivitiesData.map((activity) => {
+    return activity.activityTypeId;
+  });
+
   function calculateDuration() {
     const start = activity.schedules.split('-')[0];
     const end = activity.schedules.split('-')[1];
@@ -16,25 +30,62 @@ export default function IndividualActivity({ activity }) {
     return (duration / 60) * 80;
   }
 
+  async function bookActivity(activityTypeId) {
+    try {
+      await saveActivity({ activityTypeId });
+      const userActivities = await getUserActivities();
+      setUserActivitiesData(userActivities);
+      toast('Informações salvas com sucesso!');
+    } catch (error) {
+      if (error.response.data.message) {
+        toast('Inscrição não efetuada, você já possui uma atividade que conflita com este horário!');
+      } else {
+        toast('Não foi possível salvar suas informações!');
+      }
+    }
+  }
+
   return (
-    <ActivityInformation activityHeight={calculateDuration()}>
+    <ActivityInformation activityHeight={calculateDuration()} registered={activitiesId.includes(activity.id)}>
       <div>
         <h2>{activity.name}</h2>
         <p>{activity.schedules}</p>
       </div>
       {activity.capacity !== 0 ? (
-        <Vacancy style={{ fontSize: '30px', color: '#078632' }}>
-          <div>
-            <ion-icon name="log-in-outline"></ion-icon>
-          </div>
-          <p style={{ color: '#078632' }}>{activity.capacity} vagas</p>
+        <Vacancy style={{ fontSize: '30px', color: '#078632' }} registered={activitiesId.includes(activity.id)}>
+          {activitiesId.includes(activity.id) ? (
+            <>
+              <Registered>
+                <FaRegCheckCircle />
+                <p>Inscrito</p>
+              </Registered>
+            </>
+          ) : (
+            <>
+              <div onClick={() => bookActivity(activity.id)}>
+                <ion-icon name="log-in-outline"></ion-icon>
+              </div>
+              <p style={{ color: '#078632' }}>{activity.capacity} vagas</p>{' '}
+            </>
+          )}
         </Vacancy>
       ) : (
-        <Vacancy disabled={true}>
-          <div>
-            <ion-icon style={{ fontSize: '30px', color: 'red' }} name="close-circle-outline"></ion-icon>
-          </div>
-          <p style={{ color: 'red' }}>Esgotado</p>
+        <Vacancy disabled={true} registered={activitiesId.includes(activity.id)}>
+          {activitiesId.includes(activity.id) ? (
+            <>
+              <Registered>
+                <FaRegCheckCircle />
+                <p>Inscrito</p>
+              </Registered>
+            </>
+          ) : (
+            <>
+              <div>
+                <ion-icon style={{ fontSize: '30px', color: 'red' }} name="close-circle-outline"></ion-icon>
+              </div>
+              <p style={{ color: 'red' }}>Esgotado</p>
+            </>
+          )}
         </Vacancy>
       )}
     </ActivityInformation>
@@ -42,7 +93,7 @@ export default function IndividualActivity({ activity }) {
 }
 
 const ActivityInformation = styled.div`
-  background-color: #f1f1f1;
+  background-color: ${(props) => (props.registered ? '#D0FFDB' : '#f1f1f1')};
   width: 265px;
   height: ${(props) => `${props.activityHeight}px`};
   display: flex;
@@ -55,6 +106,10 @@ const ActivityInformation = styled.div`
     background-color: #cfcfcf;
     margin-left: 20px;
     margin-right: 16px;
+  }
+
+  div {
+    width: 100%;
   }
 
   h2 {
@@ -71,8 +126,25 @@ const ActivityInformation = styled.div`
   }
 `;
 const Vacancy = styled.button`
+  background-color: ${(props) => (props.registered ? '#D0FFDB' : '#f1f1f1')};
   border: none;
   border-left: 1px solid #cfcfcf;
   cursor: pointer;
   margin-left: 5px;
+  font-size: 19px;
+  p {
+    font-size: 9px;
+  }
+`;
+
+const Registered = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 19px;
+  p {
+    font-size: 9px;
+    color: #078632;
+  }
 `;

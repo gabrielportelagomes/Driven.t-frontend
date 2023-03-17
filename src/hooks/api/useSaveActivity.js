@@ -3,20 +3,18 @@ import useToken from '../useToken';
 
 import * as activityApi from '../../services/activityApi';
 
-export default function useActivityType() {
+export default function useSaveActivity() {
   const token = useToken();
 
   const {
-    data: activityType,
-    loading: activityTypeLoading,
-    error: activityTypeError,
-    act: getActivityType,
-  } = useAsync(() => activityApi.getActivityType(token));
+    loading: saveActivityLoading,
+    error: saveActivityError,
+    act: saveActivity,
+  } = useAsync((data) => activityApi.postActivity(data, token), false);
 
   return {
-    activityType,
-    activityTypeLoading,
-    activityTypeError,
-    getActivityType,
+    saveActivityLoading,
+    saveActivityError,
+    saveActivity,
   };
 }
