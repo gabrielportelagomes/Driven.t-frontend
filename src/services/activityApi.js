@@ -29,3 +29,13 @@ export async function postActivity(body, token) {
 
   return response.data;
 }
+
+export async function getActivityInscriptions(token, activityTypeId) {
+  const response = await api.get(`/activity/inscriptions/${activityTypeId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}

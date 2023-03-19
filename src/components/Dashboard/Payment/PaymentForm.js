@@ -3,7 +3,7 @@ import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/es/styles-compiled.css';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { formatCreditCardNumber, formatCVC, formatExpirationDate, formatFormData } from './PaymentUtils';
+import { formatCreditCardNumber, formatCVC, formatExpirationDate } from './PaymentUtils';
 
 export default class PaymentForm extends React.Component {
   state = {
