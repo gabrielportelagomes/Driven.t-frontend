@@ -58,7 +58,6 @@ export default function Activities() {
       </EmptyContainer>
     );
   }
-
   return (
     <ChooseActivies
       activityType={activityType}
