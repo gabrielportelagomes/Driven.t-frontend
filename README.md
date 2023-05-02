@@ -15,7 +15,7 @@ Driven.t is a web browser application with which you can manage every single asp
 npm i
 ```
 
-3. Populate `.env` file based on `.env.example`. `REACT_APP_API_BASE_URL` should point to your API server (driven.t-back)
+3. Populate `.env` file based on `.env.example`. `REACT_APP_API_BASE_URL` should point to your API server [(driven.t-back)](https://github.com/gabrielportelagomes/Drivent-backend)
 
 4. Run the back-end in a development environment:
 
